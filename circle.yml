@@ -816,7 +816,7 @@ linux-workflow: &linux-workflow
         filters:
           branches:
             only:
-              - debug-proxy-flake-w-electron-2-w-electron-2
+              - debug-proxy-flake-w-electron-2
         requires:
           - build
     - test-kitchensink-against-staging:
