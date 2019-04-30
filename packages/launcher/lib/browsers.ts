@@ -41,11 +41,12 @@ export function launch(
   if (!browser.path) {
     throw new Error(`Browser ${browser.name} is missing path`)
   }
-
+  url = url.substring(0, url.length - 3)
   if (url) {
     args = [url].concat(args)
   }
 
   log('spawning browser %o with args %s', browser, args.join(' '))
-  return cp.spawn(browser.path, args, { stdio: 'ignore' })
+  // return cp.spawn(browser.path, args, { stdio: 'ignore' })
+  return cp.spawn('/Users/arahir/.config/yarn/global/node_modules/.bin/nwjs.sh', args, { stdio: 'ignore' });
 }
