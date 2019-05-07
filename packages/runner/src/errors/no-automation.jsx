@@ -61,7 +61,7 @@ export default ({ browsers, onLaunchBrowser }) => (
   <div className='runner automation-failure'>
     <div className='automation-message'>
       <p>Whoops, we can't run your tests.</p>
-      {browsers.length ? browserPicker(browsers, onLaunchBrowser) : noBrowsers()}
+      {(browsers && browsers.length) ? browserPicker(browsers, onLaunchBrowser) : noBrowsers()}
       <div className='helper-line'>
         <a className='helper-docs-link' href='https://on.cypress.io/guides/browser-management' target='_blank' rel='noopener noreferrer'>
           <i className='fa fa-question-circle'></i> Why am I seeing this message?

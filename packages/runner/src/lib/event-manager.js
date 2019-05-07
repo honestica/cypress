@@ -8,8 +8,8 @@ import automation from './automation'
 import logger from './logger'
 
 import $Cypress, { $ } from '@packages/driver'
-
-const channel = io.connect({
+const realUrl = nw.global.__nw_windows[4][0].window.origin
+const channel = io.connect(realUrl, {
   path: '/__socket.io',
   transports: ['websocket'],
 })
@@ -50,6 +50,8 @@ const eventManager = {
     }))
 
     channel.on('change:to:url', (url) => {
+      logger.info(url)
+      logger.info(window)
       window.location.href = url
     })
 

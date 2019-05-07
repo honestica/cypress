@@ -37,16 +37,16 @@ export function launch(
   args: string[] = []
 ) {
   log('launching browser %o to open %s', browser, url)
-
+  // url = url.substring(0, url.length - 3)
   if (!browser.path) {
     throw new Error(`Browser ${browser.name} is missing path`)
   }
-  url = url.substring(0, url.length - 3)
+
   if (url) {
     args = [url].concat(args)
   }
 
   log('spawning browser %o with args %s', browser, args.join(' '))
   // return cp.spawn(browser.path, args, { stdio: 'ignore' })
-  return cp.spawn('/Users/arahir/.config/yarn/global/node_modules/.bin/nwjs.sh', args, { stdio: 'ignore' });
+  return cp.spawn('/Users/arahir/.config/yarn/global/node_modules/.bin/nwjs-v2.sh', args, { stdio: 'ignore' });
 }
