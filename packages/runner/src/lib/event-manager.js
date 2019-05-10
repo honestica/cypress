@@ -8,12 +8,16 @@ import automation from './automation'
 import logger from './logger'
 
 import $Cypress, { $ } from '@packages/driver'
-const realUrl = nw.global.__nw_windows[4][0].window.origin
+const realUrl = window.nw.global.__nw_windows[4][0].window.origin
 const channel = io.connect(realUrl, {
   path: '/__socket.io',
   transports: ['websocket'],
 })
 
+// const channel = io.connect({
+//   path: '/__socket.io',
+//   transports: ['websocket'],
+// })
 channel.on('connect', () => {
   channel.emit('runner:connected')
 })
@@ -43,6 +47,8 @@ const eventManager = {
     }
 
     channel.emit('is:automation:client:connected', connectionInfo, action('automationEnsured', (isConnected) => {
+      logger.log(connectionInfo)
+      logger.log(isConnected)
       state.automation = isConnected ? automation.CONNECTED : automation.MISSING
       channel.on('automation:disconnected', action('automationDisconnected', () => {
         state.automation = automation.DISCONNECTED
@@ -50,8 +56,6 @@ const eventManager = {
     }))
 
     channel.on('change:to:url', (url) => {
-      logger.info(url)
-      logger.info(window)
       window.location.href = url
     })
 

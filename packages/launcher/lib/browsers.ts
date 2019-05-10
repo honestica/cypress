@@ -37,7 +37,6 @@ export function launch(
   args: string[] = []
 ) {
   log('launching browser %o to open %s', browser, url)
-  // url = url.substring(0, url.length - 3)
   if (!browser.path) {
     throw new Error(`Browser ${browser.name} is missing path`)
   }

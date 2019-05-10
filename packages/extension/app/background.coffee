@@ -2,6 +2,7 @@ map     = require("lodash/map")
 pick    = require("lodash/pick")
 once    = require("lodash/once")
 Promise = require("bluebird")
+debug = require("debug")("cypress:client:automation")
 
 HOST = "CHANGE_ME_HOST"
 PATH = "CHANGE_ME_PATH"
@@ -14,9 +15,11 @@ firstOrNull = (cookies) ->
 
 connect = (host, path, io) ->
   io ?= global.io
-
+  debug(host)
+  debug(path)
   ## bail if io isnt defined
   return if not io
+  debug('io is defined')
 
   listenToCookieChanges = once ->
     chrome.cookies.onChanged.addListener (info) ->
@@ -24,6 +27,7 @@ connect = (host, path, io) ->
         client.emit("automation:push:request", "change:cookie", info)
 
   fail = (id, err) ->
+    debug('oh no its a fail')
     client.emit("automation:response", id, {
       __error: err.message
       __stack: err.stack
@@ -41,9 +45,12 @@ connect = (host, path, io) ->
 
   ## cannot use required socket here due
   ## to bug in socket io client with browserify
+  debug('host')
+  debug(host)
   client = io.connect(host, {path: path, transports: ["websocket"]})
 
   client.on "automation:request", (id, msg, data) ->
+    debug('request automation')
     switch msg
       when "get:cookies"
         invoke("getCookies", id, data)
@@ -65,12 +72,13 @@ connect = (host, path, io) ->
         fail(id, {message: "No handler registered for: '#{msg}'"})
 
   client.on "connect", ->
+    debug('client connect')
     listenToCookieChanges()
 
     client.emit("automation:client:connected")
 
   return client
-
+debug('initial')
 ## initially connect
 connect(HOST, PATH, global.io)
 

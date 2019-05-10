@@ -119,11 +119,14 @@ class Socket
       throw new Error("Could not process '#{message}'. No automation clients connected.")
 
   createIo: (server, path, cookie) ->
+    debug("io path", path)
+    debug("io server", server)    
     socketIo.server(server, {
       path: path
       destroyUpgrade: false
       serveClient: false
-      cookie: cookie
+      cookie: cookie,
+      origins: '*:*'
     })
 
   startListening: (server, automation, config, options) ->
@@ -172,7 +175,7 @@ class Socket
 
       socket.on "automation:client:connected", =>
         return if automationClient is socket
-
+        debug('automation:client:connected')
         automationClient = socket
 
         debug("automation:client connected")
@@ -215,6 +218,7 @@ class Socket
         .then (resp) ->
           cb({response: resp})
         .catch (err) ->
+          debug(err)
           cb({error: errors.clone(err)})
 
       socket.on "reporter:connected", =>

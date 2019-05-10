@@ -3,6 +3,7 @@ uuid        = require("uuid")
 Promise     = require("bluebird")
 Cookies     = require("./cookies")
 Screenshot  = require("./screenshot")
+debug       = require("debug")("cypress:server:automation")
 
 assertValidOptions = (options, keys...) ->
   _.each keys, (key) ->
@@ -12,7 +13,7 @@ assertValidOptions = (options, keys...) ->
 module.exports = {
   create: (cyNamespace, cookieNamespace, screenshotsFolder) ->
     # assertValidOptions(options, "namespace", "cookie", "screenshotsFolder")
-
+    debug('automation:created')
     requests = {}
 
     middleware = null
@@ -46,16 +47,19 @@ module.exports = {
         id = uuid.v4()
 
         requests[id] = (obj) ->
+          debug('automation:inside:request')
           ## normalize the error from automation responses
           if e = obj.__error
             err = new Error(e)
             err.name = obj.__name
             err.stack = obj.__stack
+            debug('automation:error')
+            debug(err)
             reject(err)
           else
+            debug('automation:success')
             ## normalize the response
             resolve(obj.response)
-
         ## callback onAutomate with the right args
         fn(message, data, id)
 
